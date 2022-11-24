@@ -17,7 +17,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -96,6 +96,7 @@ const MarketplaceIcon = styled.img`
 `
 
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
+  position: relative;
   width: 100%;
   background-color: ${({ theme, assetInBag, useAccentColor }) =>
     assetInBag ? theme.accentFailure : useAccentColor ? theme.accentAction : theme.backgroundInteractive};
@@ -225,7 +226,11 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
         <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
           {listing ? 'Your Price' : 'List for Sale'}
         </ThemedText.SubHeader>
-        {listing && <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />}
+        {listing && (
+          <ExternalLink href={listing.marketplaceUrl}>
+            <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />
+          </ExternalLink>
+        )}
       </HeaderRow>
       <PriceRow>
         {listing ? (
@@ -353,7 +358,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
-            <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
+            <ExternalLink href={cheapestOrder.marketplaceUrl}>
+              <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
+            </ExternalLink>
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
@@ -382,7 +389,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 }}
               >
                 <SubHeader color="white" lineHeight="20px">
-                  <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+                  <span>{assetInBag ? 'Remove' : 'Add to Bag'}</span>
                 </SubHeader>
               </BuyNowButton>
             </BuyNowButtonContainer>
@@ -393,9 +400,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       )}
       {isForSale && (
         <OwnerInformationContainer>
-          <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-            Seller:
-          </ThemedText.BodySmall>
+          {asset.tokenType !== 'ERC1155' && asset.owner.address && (
+            <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+              Seller:
+            </ThemedText.BodySmall>
+          )}
           <OwnerText
             target="_blank"
             href={`https://etherscan.io/address/${asset.owner.address}`}
