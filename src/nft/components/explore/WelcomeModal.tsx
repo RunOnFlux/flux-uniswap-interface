@@ -38,6 +38,11 @@ const Content = styled.div`
   gap: 16px;
 `
 
+const Link = styled(ExternalLink)`
+  color: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentActive};
+`
+
 const Title = styled(ThemedText.LargeHeader)`
   @media (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
     font-size: 20px !important;
@@ -82,28 +87,32 @@ export function WelcomeModal({ onDismissed }: { onDismissed: () => void }) {
 
   return (
     <Modal isOpen={isOpen} onSwipe={dismiss} maxWidth={720} isBottomSheet={false}>
-      <Container>
+      <Container data-testid="nft-welcome-modal">
         <Background
           {...(theme.darkMode ? BACKGROUND_IMAGE.dark : BACKGROUND_IMAGE.light)}
           alt="Welcome modal background"
           draggable={false}
         />
         <Content>
-          <Title>Introducing Uniswap NFT</Title>
+          <Title>Introducing NFTs on Uniswap</Title>
           <Paragraph>
-            We’re excited to announce that Uniswap Labs has acquired Genie to build the marketplace for all digital
-            assets! With Uniswap NFT, you can buy and sell NFTs across all marketplaces with the full functionality of
-            Genie. Additonally, if you’ve used Genie in the past, then you may be eligible for a USDC airdrop. You can
-            connect your wallet to claim any rewards. For more details on the airdrop please read the official
-            announcement on the Uniswap Labs blog.{' '}
-            <ExternalLink
+            You can now buy and sell NFTs on Uniswap across marketplaces. Trade here to find more listings and better
+            prices. <br />
+            <br />
+            NFTs on Uniswap replaces Genie, which was{' '}
+            <Link href="https://uniswap.org/blog/genie" title="Uniswap Labs has acquired Genie">
+              acquired{' '}
+            </Link>{' '}
+            by Uniswap Labs earlier this year. If you have used Genie in the past, you may be eligible for a USDC
+            airdrop.{' '}
+            <Link
               href="https://uniswap.org/blog/uniswap-nft-aggregator-announcement"
               title="Uniswap NFT aggregator announcement"
             >
               Learn more.
-            </ExternalLink>
+            </Link>
           </Paragraph>
-          <CloseButton size={24} onClick={dismiss} />
+          <CloseButton data-testid="nft-intro-modal" size={24} onClick={dismiss} />
         </Content>
       </Container>
     </Modal>
